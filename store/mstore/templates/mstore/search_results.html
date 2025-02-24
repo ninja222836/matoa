@@ -1,0 +1,12 @@
+<!-- *карточка-ряд выпадающего списка* -->
+{% for product in results %}
+<li>
+    <a href="{% url 'Product' product.slug %}" class="list-search__link">
+        <div class="list-search__img">
+            <picture><source srcset="{{ product.card_image_webp.url }}" type="image/webp"><img src="{{ product.card_image.url }}" alt="{{ product.name }}"></picture>
+        </div>
+        <span class="list-search__name">{{ product.name }}</span>
+    </a>
+</li>
+{% endfor %}
+<!-- *конец карточки (они все засунуты в li)* -->

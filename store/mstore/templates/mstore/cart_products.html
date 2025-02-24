@@ -1,0 +1,78 @@
+<!-- общая форма корзины -->
+					<form action="#" class="cart">
+						<div class="cart__items" >
+							{% if user.is_anonymous %}
+							<p>Please, log in or register to view your products</p>
+							{% else %}
+{% for cart_product in cart_products %}
+							<!-- карточка (в этой внутри прокомментированы элементы, в следующих по аналогии) -->
+							<div class="cart__item item-cart">
+								<a href="" class="item-cart__image">
+									<!-- src-путь к картинке, alt-альтернативный текст (желательно его в одну переменную с названием, они одинаковые должны быть) -->
+									<picture><source srcset="{{ cart_product.product.card_image_webp.url }}" type="image/webp"><img src="{{ cart_product.product.card_image.url }}" alt="{{ cart_product.product.name }}"></picture>
+								</a>
+								<div class="item-cart__body">
+									<!-- название товара -->
+									<a href="" class="item-cart__title">{{ cart_product.product.name }}</a>
+
+									{% if cart_product.product.discount > 0 %}
+									<!-- старая цена -->
+									<div class="item-cart__old-price old-price">$ {{ cart_product.product.price }}</div>
+									{% endif %}
+									<!-- цена со скидкой -->
+									<div class="item-cart__price">$ {{ cart_product.product.sell_price }}</div>
+								</div>
+								<div class="item-cart__info">
+									<div class="item-cart__packaging">
+										<div class="item-cart__label">Select Packaging</div>
+										<!-- выбор упаковки -->
+										<select name="form[]" data-class-modif="cart">
+											<option value="1" selected>Default Packaging (Free)</option>
+											<option value="2">Wooden Packaging (Rp 50.000)</option>
+											<option value="3">Textile Packaging (Rp 30.000)</option>
+											<option value="3">{{ cart_product.product.slug }}</option>
+										</select>
+									</div>
+									<div class="item-cart__actions">
+										<div data-quantity class="item-cart__quantity quantity">
+											<button hx-trigger="click" hx-target="#cart_cards" hx-get="{% url 'Update Cart' cart_product.product.slug 'remove' %}" data-quantity-minus type="button" class="quantity__button quantity__button_minus"></button>
+											<div class="quantity__input">
+												<!-- поле количества -->
+												<input data-quantity-value autocomplete="off" type="text" name="form[]" value="{{ cart_product.quantity }}">
+											</div>
+											<button hx-trigger="click" hx-target="#cart_cards" hx-get="{% url 'Update Cart' cart_product.product.slug 'add' %}" data-quantity-plus type="button" class="quantity__button quantity__button_plus"></button>
+										</div>
+										<!-- общая стоимость по 1 виду товара -->
+										<div class="item-cart__total">$ {{ cart_product.get_total }}</div>
+										<!-- кнопка удалить товар -->
+										<button hx-trigger="click" hx-target="#cart_cards" hx-get="{% url 'Update Cart' cart_product.product.slug 'delete' %}" class="item-cart__delete _icon-delete"></button>
+									</div>
+								</div>
+							</div>
+							<!-- конец карточки -->
+							{% endfor %}
+							{% if not cart_products %}
+							<p>Your cart is empty...</p>
+							{% endif %}
+							{% endif %}
+							</div>
+						<div class="cart__footer">
+							<div class="cart__promo promo-cart">
+								<label for="p-1" class="promo-cart__label">Kode Promo</label>
+								<div class="promo-cart__line">
+									<!-- поле промокода -->
+									<input id="p-1" autocomplete="off" type="text" name="promo" class="promo-cart__input">
+								</div>
+								<div class="promo-cart__info">35% OFF</div>
+							</div>
+							<div class="cart__total total-cart">
+								<div class="total-cart__label">Subtotal</div>
+								<div class="total-cart__value">
+
+									<!-- общая цена покупки со скидкой -->
+									<div class="total-cart__price">$ {{ order.get_cart_total }}</div>
+								</div>
+							</div>
+						</div>
+						<button type="submit" class="cart__button button">Checkout</button>
+					</form>

@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>{{ title }}</title>
+	<meta charset="UTF-8">
+	<meta name="format-detection" content="telephone=no">
+	<!-- <style>body{opacity: 0;}</style> -->
+	<link rel="stylesheet" href="{% static 'mstore/css/style.min.css' %}?_v=20230808184149">
+	<link rel="shortcut icon" href="{% static 'mstore/favicon.ico' %}">
+	<!-- <meta name="robots" content="noindex, nofollow"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	 <script src="https://unpkg.com/htmx.org@1.9.2"
+            integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h"
+            crossorigin="anonymous"></script>
+</head>
+
+<body style="opacity: 0;">
+	<div class="wrapper">
+		<!-- ********************* -->
+		<!--         HEADER        -->
+		<!-- ********************* -->
+
+		<header class="header" data-lp>
+			<div class="header__container">
+				<a href="{% url 'Home' %}" class="header__logo"><picture><source srcset="{% static 'mstore/img/logo.webp' %}" type="image/webp"><img src="{% static 'mstore/img/logo.png' %}" alt=""></picture></a>
+				<div class="header__menu menu">
+					<nav class="menu__body">
+						<ul class="menu__list">
+							{% for category in categories %}
+							<li class="menu__item"><a href="{% url 'Product_List' category.slug %}" class="menu__link">{{ category.name }}</a></li>
+							{% endfor %}
+						</ul>
+					</nav>
+				</div>
+				<div class="header__actions actions-header">
+					<a data-popup="#search"  href="" class="actions-header__search _icon-search"></a>
+					{% if user.is_authenticated %}
+					<a href="{% url 'Log out' %}" data-da=".menu__body, 400" class="actions-header__login _icon-user">Log Out</a>
+					{% else %}
+					<a href="{% url 'Login' %}" data-da=".menu__body, 400" class="actions-header__login _icon-user">Log In</a>
+					{% endif %}
+					<a href="{% url 'Favourites' %}" class="actions-header__like _icon-like"></a>
+					<a href="#" class="actions-header__cart _icon-cart" hx-trigger="click, load" hx-target="#cart_cards" hx-get="{% url 'Cart' %}" data-popup="#cart_" ><span></span></a>
+					<button type="button" class="icon-menu"><span></span></button>
+				</div>
+			</div>
+		</header>
+		<!--     end of header     -->
+
+        {% block content %}
+        {% endblock %}
+
+		<!-- блок Clients -->
+			<section class="page__clients clients">
+				<div class="clients__container">
+					<div class="clients__item">
+						<picture><source data-srcset="{% static 'mstore/img/clients/01.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/clients/01.png' %}" alt="BNI"></picture>
+					</div>
+					<div class="clients__item">
+						<picture><source data-srcset="{% static 'mstore/img/clients/02.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/clients/02.png' %}" alt="PermataBank"></picture>
+					</div>
+					<div class="clients__item">
+						<picture><source data-srcset="{% static 'mstore/img/clients/03.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/clients/03.png' %}" alt="MasterCard"></picture>
+					</div>
+					<div class="clients__item">
+						<picture><source data-srcset="{% static 'mstore/img/clients/04.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/clients/04.png' %}" alt="Danamon"></picture>
+					</div>
+					<div class="clients__item">
+						<picture><source data-srcset="{% static 'mstore/img/clients/05.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/clients/05.png' %}" alt="VISA"></picture>
+					</div>
+					<div class="clients__item">
+						<picture><source data-srcset="{% static 'mstore/img/clients/06.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/clients/06.png' %}" alt="mandiri"></picture>
+					</div>
+					<div class="clients__item">
+						<picture><source data-srcset="{% static 'mstore/img/clients/07.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/clients/07.png' %}" alt="Kredivo"></picture>
+					</div>
+					<div class="clients__item">
+						<picture><source data-srcset="{% static 'mstore/img/clients/08.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/clients/08.png' %}" alt="UOB"></picture>
+					</div>
+					<div class="clients__item">
+						<picture><source data-srcset="{% static 'mstore/img/clients/09.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/clients/09.png' %}" alt="GO PAY"></picture>
+					</div>
+					<div class="clients__item">
+						<picture><source data-srcset="{% static 'mstore/img/clients/10.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/clients/10.png' %}" alt="Standart Chartered"></picture>
+					</div>
+				</div>
+			</section>
+			<!-- конец блока Clients -->
+		</main>
+
+		<!-- ********************* -->
+		<!--         FOOTER        -->
+		<!-- ********************* -->
+		<footer data-spollers="991.98,max" class="footer">
+			<div class="footer__container">
+				<div class="footer__column">
+					<a href="" class="footer__logo">
+						<picture><source srcset="{% static 'mstore/img/logo-footer.webp' %}" type="image/webp"><img src="{% static 'mstore/img/logo-footer.png' %}" alt="logo"></picture>
+					</a>
+					<div class="footer__blocks">
+						<div class="footer__block">
+							<h3 class="footer__label label-footer">Address</h3>
+							<div class="footer__text">
+								<p>Store & Office</p>
+								<p>Jl. Setrasari Kulon III, No. 10-12,</p>
+								<p>Sukarasa, Sukasari, Bandung,</p>
+								<p>Jawa Barat, Indonesia 40152</p>
+							</div>
+						</div>
+						<div class="footer__block">
+							<h3 class="footer__label label-footer">Office Hour</h3>
+							<div class="footer__text">
+								<p>Monday - Sunday</p>
+								<p>10.00 - 18.00</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="footer__column">
+					<button type="button" data-spoller class="footer__title title title_white _icon-arrow-select">Get in touch</button>
+					<div class="footer__contacts contacts-footer">
+						<div class="contacts-footer__body">
+							<div class="contacts-footer__label label-footer">Phone</div>
+							<a href="tel:02220277564" class="contacts-footer__value">022-20277564</a>
+							<div class="contacts-footer__label label-footer">Service Center</div>
+							<a href="tel:08112338899" class="contacts-footer__value">0811-233-8899</a>
+							<div class="contacts-footer__label label-footer">Customer Service</div>
+							<a href="tel:08112359988" class="contacts-footer__value">0811-235-9988</a>
+							<div class="footer__social social">
+								<a href="#" class="social__item _icon-s-facebook"></a>
+								<a href="#" class="social__item _icon-s-instagram"></a>
+								<a href="#" class="social__item _icon-s-twitter"></a>
+								<a href="#" class="social__item _icon-s-youtube"></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="footer__column">
+					<button type="button" data-spoller class="footer__title title title_white _icon-arrow-select">Useful Link</button>
+					<nav class="footer__menu menu-footer">
+						<ul class="menu-footer__list">
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Warranty & Complaints</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Order & Shipping</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Tracking Order</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">About Us</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Repair</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Terms</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">FAQ</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+				<div class="footer__column">
+					<button type="button" data-spoller class="footer__title title title_white _icon-arrow-select">Campaign</button>
+					<nav class="footer__menu menu-footer">
+						<ul class="menu-footer__list">
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Mengenal Arti Cukups</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Tell Your Difference</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Waykambas</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Rebrand</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Gallery</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Singo</a>
+							</li>
+							<li class="menu-footer__item">
+								<a href="" class="menu-footer__link">Rakai</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</footer>
+		<!--      end of footer     -->
+	</div>
+
+
+
+
+
+	<!-- ********************* -->
+	<!--    POPUP search    -->
+	<!-- *внутри имеется форма поиска* -->
+	<!-- ********************* -->
+	{% include 'mstore/search.html' %}
+	<!--  конец попапа search  -->
+
+	<!-- ********************* -->
+	<!--    POPUP cart    -->
+	<!-- *внутри добавление товаров в карточки, поле промокода* -->
+	<!-- ********************* -->
+	{% include 'mstore/cart.html' %}
+	<!--  конец попапа cart  -->
+
+	<script src="{% static 'mstore/js/app.min.js' %}?_v=20230808184149"></script>
+</body>
+
+
+
+</html>
+<script>
+      window.onload = function () {
+        document.getElementsByTagName("body")[0].style.opacity = "1";
+      }
+    </script>
+<script src="js/app.min.js?_v=20230826185428"></script>
+	<script>
+		function show_hide_password(target) {
+			var input = document.getElementById('password-input');
+			if (input.getAttribute('type') == 'password') {
+				target.classList.add('view');
+				input.setAttribute('type', 'text');
+			} else {
+				target.classList.remove('view');
+				input.setAttribute('type', 'password');
+			}
+			return false;
+		}
+
+		function show_hide_password_confirm(target) {
+			var input = document.getElementById('password-confirm');
+			if (input.getAttribute('type') == 'password') {
+				target.classList.add('view');
+				input.setAttribute('type', 'text');
+			} else {
+				target.classList.remove('view');
+				input.setAttribute('type', 'password');
+			}
+			return false;
+		}
+	</script>

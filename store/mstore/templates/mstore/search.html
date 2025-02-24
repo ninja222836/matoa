@@ -1,0 +1,26 @@
+<div id="search" aria-hidden="true" class="popup popup_search">
+		<div class="popup__wrapper">
+			<div class="popup__content">
+				<button data-close type="button" class="popup__close"></button>
+				<div class="popup__text">
+					<!-- *начинается форма поиска* -->
+					<form method="get" class="search-form" action="{% url 'Search Results' %}" >
+						<div class="search-form__title title title_small">Search</div>
+						<div class="search-form__body">
+							<div class="search-form__line">
+								<input hx-get="{% url 'Tab Results' %}" hx-target="#results" hx-trigger="keyup changed delay:500ms" data-required autocomplete="off" type="text" name="search" data-error="No entered request" placeholder="Enter product name" class="search-form__input input"  >
+
+								<!-- *выпадающий список с динамическими результатами поиска* -->
+								<ul class="search-form__list list-search" id="results">
+
+								</ul>
+								<!-- *конец выпадающего списка* -->
+							</div>
+							<button type="submit" class="button _icon-search"></button>
+						</div>
+					</form>
+					<!-- *конец формы поиска* -->
+				</div>
+			</div>
+		</div>
+	</div>

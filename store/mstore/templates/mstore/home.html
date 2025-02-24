@@ -1,0 +1,343 @@
+{% extends 'mstore/base.html' %}
+{% load static %}
+{% block content %}
+		<!-- ********************* -->
+		<!--        CONTENT        -->
+		<!-- ********************* -->
+		<main class="page">
+			<!-- первый блок со слайдером -->
+			<!-- *внутри имеются слайды (для которых наверное нужен шаблон), кнопка добавления в корзину* -->
+			<section class="page__main-slider main-slider">
+				<div class="main-slider__container">
+					<!-- Оболонка слайдера (комменты на укр не для Максима!!! для Оли. Макс пусть ищет кнопку добавления в корзину, она на каждом слайде отдельная) -->
+					<div class="main-slider__slider swiper">
+						<!-- Частина слайдера, що рухається -->
+						<div class="main-slider__wrapper swiper-wrapper">
+							<!-- Слайд (вот это для Максима!) (в этом внутри прокомментированы элементы, в следующих по аналогии) -->
+							{% for slider_product in products_for_slider %}
+							<div class="main-slider__slide slide-main-slider swiper-slide">
+								<div data-da=".slide-main-slider__body_1, 767.98, 1" class="slide-main-slider__image-ibg_contain">
+									<!-- src-путь к картинке, alt-альтернативный текст (желательно его в одну переменную с названием, они одинаковые должны быть) -->
+									<picture><source srcset="{{ slider_product.main_image_webp.url }}" type="image/webp"><img src="{{ slider_product.main_image.url }}" alt="{{ slider_product.name }}"></picture>
+								</div>
+								<div class="slide-main-slider__body slide-main-slider__body_1">
+									<!-- название -->
+									<h2 class="slide-main-slider__title">{{ slider_product.name }}</h2>
+									<!-- текст -->
+									<div class="slide-main-slider__text text">{{ slider_product.description_for_slider }}</div>
+									<!-- ссылка ведет на страничку товара -->
+									<a href="{% url 'Product' slider_product.slug %}" class="slide-main-slider__more more">Discover</a>
+									<div class="slide-main-slider__actions">
+										<!-- КНОПКА ДОБАВЛЕНИЯ В КОРЗИНУ №1 -->
+										<button hx-trigger="click" hx-get="{% url 'Add to cart' slider_product.slug %}" data-ripple type="button" class="slide-main-slider__button button button_cart"><span class="_icon-cart-plus">Add to cart</span></button>
+										<!-- ее конец, следующее по коду - просто ссылка какая-то -->
+										<a href="#" class="slide-main-slider__button  border-button  border-button_cicil">
+											<img src="{% static 'mstore/img/icons/cicil.svg' %}" alt="cicil">
+										</a>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+
+						</div>
+						<!-- Якщо потрібна навігація (ліворуч/праворуч) -->
+						<div class="main-slider__arrows">
+							<button type="button" class="main-slider__arrow swiper-button-prev _icon-arrow-slider"></button>
+							<button type="button" class="main-slider__arrow swiper-button-next _icon-arrow-slider"></button>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- конец первого блока со слайдером -->
+
+			<!-- блок с карточками Discover Now -->
+			<!-- *внутри имеются карточки (для которых желательно шаблон)* -->
+			<div data-watch data-watch-threshold="0.3" class="page__discover-now discover-now">
+				<div class="discover-now__container">
+					<!-- карточка (в этой внутри прокомментированы элементы, в следующих по аналогии) -->
+					<article class="discover-now__item item-discover-now">
+						<!-- заголовок -->
+						<h3 class="item-discover-now__title">Luxurious <span>Eyewear</span></h3>
+						<div class="item-discover-now__body">
+							<!-- текст -->
+							<div class="item-discover-now__text">See the beauty of exotic world with the luxurious glasses</div>
+							<!-- ссылка по идее должна вести на страницу раздела Eyewear (у меня его нет в макете, поэтому она вникуда) -->
+							<a href="{% url 'Product_List' categories.1.slug %}" class="item-discover-now__link more">Discover Now</a>
+							<div class="item-discover-now__image">
+								<!-- src-путь к картинке, alt-альтернативный текст (желательно его в одну переменную с заголовком, они одинаковые должны быть) -->
+								<picture><source data-srcset="{% static 'mstore/img/discover-now/01.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/discover-now/01.jpg' %}" alt="Luxurious Glasses"></picture>
+							</div>
+						</div>
+					</article>
+					<!-- конец карточки -->
+					<!-- карточка -->
+					<article class="discover-now__item item-discover-now">
+						<h3 class="item-discover-now__title">Comfortable <span>Watches</span></h3>
+						<div class="item-discover-now__body">
+							<div class="item-discover-now__text">Feels the balancing function and beauty in our wooden watches</div>
+							<a href="{% url 'Product_List' categories.0.slug %}" class="item-discover-now__link more">Discover Now</a>
+							<div class="item-discover-now__image">
+								<picture><source data-srcset="{% static 'mstore/img/discover-now/02.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/discover-now/02.jpg' %}" alt="Wooden Watches"></picture>
+							</div>
+						</div>
+					</article>
+					<!-- конец карточки -->
+				</div>
+			</div>
+			<!-- конец блока с карточками Discover Now -->
+
+			<!-- блок Monthly deals -->
+			<!-- *внутри имеются карточки с товарами, кнопки добавления в корзину и лайка (добавление в избранное)* -->
+			<section class="page__monthly-deals monthly-deals">
+				<div class="monthly-deals__container">
+					<h2 class="monthly-deals__title title">Monthly Deals</h2>
+					<div class="monthly-deals__items">
+						<!-- карточка товара (в этой внутри прокомментированы элементы, в следующих по аналогии) -->
+						{% for product in monthly_deals %}
+						<article class="monthly-deals__item item-monthly-deal">
+							<a href="{% url 'Product' product.slug %}" class="item-monthly-deal__image-ibg">
+								<!-- src-путь к картинке, alt-альтернативный текст (желательно его в одну переменную с названием, они одинаковые должны быть) -->
+								<picture><source data-srcset="{{ product.card_image_webp.url }}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{{ product.card_image.url }}" alt="{{ product.name }}"></picture>
+							</a>
+							<div class="item-monthly-deal__body">
+								<div class="item-monthly-deal__visible">
+									<!-- название товара -->
+									<h4 class="item-monthly-deal__title">
+										<a href="#" class="item-monthly-deal__link-title">{{ product.name }}</a>
+									</h4>
+									<!-- скидка -->
+									{% if discount > 0 %}
+									<div class="item-monthly-deal__discount">{{ product.discount }}% Off</div>
+									<!-- старая цена -->
+									<div class="item-monthly-deal__price item-monthly-deal__price_old">$ {{ product.price }}</div>
+									{% endif %}
+									<!-- цена со скидкой -->
+									<div class="item-monthly-deal__price">$ {{ product.sell_price }}</div>
+								</div>
+								<div class="item-monthly-deal__hidden">
+									<div class="item-monthly-deal__actions">
+										<!-- кнопка лайка -->
+										<buttton class="item-monthly-deal__like" type="button">
+											<svg stroke="#d84727" width="20" height="18" viewBox="0 0 22 20" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+												<path d="M20.9999 3.09334C20.1066 1.26001 17.5332 -0.239994 14.5399 0.63334C13.1096 1.0465 11.8616 1.93253 10.9999 3.14667C10.1382 1.93253 8.89027 1.0465 7.45991 0.63334C4.45991 -0.22666 1.89324 1.26001 0.999911 3.09334C-0.253422 5.66001 0.266578 8.54667 2.54658 11.6733C4.33325 14.12 6.88658 16.6 10.5932 19.48C10.7104 19.5714 10.8547 19.621 11.0032 19.621C11.1518 19.621 11.2961 19.5714 11.4132 19.48C15.1132 16.6067 17.6732 14.1467 19.4599 11.6733C21.7332 8.54667 22.2532 5.66001 20.9999 3.09334Z" fill="black" />
+											</svg>
+										</buttton>
+										<!-- кнопка добавления в корзину -->
+										<button hx-trigger="click" hx-get="{% url 'Add to cart' product.slug %}" class="item-monthly-deal__cart button button_small" type="button">Add to cart</button>
+									</div>
+								</div>
+							</div>
+						</article>
+						{% endfor %}
+						<!-- конец карточки -->
+					</div>
+				</div>
+			</section>
+			<!-- конец блока Monthly deals -->
+
+			<!-- блок Recent News (при желании его тоже можно посадить на админку, как впрочем все неуказанные блоки) -->
+			<section class="page__recent-news recent-news">
+				<div class="recent-news__container">
+					<h2 class="recent-news__title title">Recent News</h2>
+					<div class="recent-news__body">
+						<div class="recent-news__content">
+							<div class="recent-news__label">Where To Travel</div>
+							<div class="recent-news__sub-title">Matoa Where To Travel? Yogyakarta</div>
+							<a href="#" class="recent-news__button border-button border-button_small">Discover</a>
+						</div>
+						<div class="recent-news__image">
+							<picture><source data-srcset="{% static 'mstore/img/recent-news/01.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/recent-news/01.jpg' %}" alt="Dark watch on a man's wrist"></picture>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- конец блока Recent News -->
+
+			<!-- блок Collections -->
+			<!-- *внутри имеются карточки с товарами по категориям, пагинация* -->
+			<section class="page__collections collections">
+				<div class="collections__container">
+					<div class="collections__body">
+						<div class="collections__column">
+							<h3 class="collections__title title title_small">Maple Series</h3>
+							<!-- категория Maple (оставила id, по которым можно обратиться к категории и туда поместить карточку) -->
+							<div id="cat-01" class="collections__items">
+								<!-- карточка товара (в этой внутри прокомментированы элементы, в следующих по аналогии) -->
+								<!-- *каждой карточке присваиваю свое id типо для идентификации товара* -->
+								{% for product in products_maple %}
+								<article id="pid-{{ product.pid }}" class="collections__item item">
+									<a href="{% url 'Product' product.slug %}" class="item__image">
+										<!-- src-путь к картинке, alt-альтернативный текст (желательно его в одну переменную с названием, они одинаковые должны быть) -->
+										<picture><source data-srcset="{{ product.main_image_webp.url }}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{{ product.main_image.url }}" alt="{{ product.name }}"></picture>
+									</a>
+									<div class="item__body">
+										<!-- название товара -->
+										<h4 class="item__title">
+											<a href="{% url 'Product' product.slug %}" class="item__link-title">{{ product.name }}</a>
+										</h4>
+										<!-- цена -->
+										{% if product.discount > 0 %}
+										<div class="item__old-price">$ {{ product.price }}</div>
+										{% endif %}
+										<div class="item__price">$ {{ product.sell_price }}</div>
+									</div>
+								</article>
+								{% endfor %}
+							</div>
+								<!-- конец карточки -->
+							<!-- конец категории -->
+						</div>
+						<div class="collections__column">
+							<h3 class="collections__title title title_small">Ebony Series</h3>
+							<!-- категория Ebony -->
+							<div id="cat-02" class="collections__items">
+								{% for product in products_ebony %}
+								<article id="pid-{{ product.pid }}" class="collections__item item">
+									<a href="{% url 'Product' product.slug %}" class="item__image">
+										<!-- src-путь к картинке, alt-альтернативный текст (желательно его в одну переменную с названием, они одинаковые должны быть) -->
+										<picture><source data-srcset="{{ product.main_image_webp.url }}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{{ product.main_image.url }}" alt="{{ product.name }}"></picture>
+									</a>
+									<div class="item__body">
+										<!-- название товара -->
+										<h4 class="item__title">
+											<a href="{% url 'Product' product.slug %}" class="item__link-title">{{ product.name }}</a>
+										</h4>
+										<!-- цена -->
+										{% if product.discount > 0 %}
+										<div class="item__old-price">$ {{ product.price }}</div>
+										{% endif %}
+										<div class="item__price">$ {{ product.sell_price }}</div>
+									</div>
+								</article>
+								{% endfor %}
+							</div>
+							<!-- конец категории -->
+						</div>
+						<div class="collections__column">
+							<h3 class="collections__title title title_small">Featured</h3>
+							<!-- категория Featured-->
+							<div id="cat-03" class="collections__items">
+								{% for product in products_featured %}
+								<article id="pid-{{ product.pid }}" class="collections__item item">
+									<a href="{% url 'Product' product.slug %}" class="item__image">
+										<!-- src-путь к картинке, alt-альтернативный текст (желательно его в одну переменную с названием, они одинаковые должны быть) -->
+										<picture><source data-srcset="{{ product.main_image_webp.url }}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{{ product.main_image.url }}" alt="{{ product.name }}"></picture>
+									</a>
+									<div class="item__body">
+										<!-- название товара -->
+										<h4 class="item__title">
+											<a href="{% url 'Product' product.slug %}" class="item__link-title">{{ product.name }}</a>
+										</h4>
+										<!-- цена -->
+										{% if product.discount > 0 %}
+										<div class="item__old-price">$ {{ product.price }}</div>
+										{% endif %}
+										<div class="item__price">$ {{ product.sell_price }}</div>
+									</div>
+								</article>
+								{% endfor %}
+							</div>
+							<!-- конец категории -->
+						</div>
+					</div>
+					<div class="collections__footer footer-collections">
+						<div class="footer-collections__body">
+							<!-- кнопка пагинации вперед (задан атрибут disabled для кнопки, по которой дальше нельзя перейти, к нему прописаны стили неработающей стрелки) -->
+							<button disabled class="footer-collections__arrow footer-collections__arrow_prev _icon-arrow-slider"></button>
+							<!-- номер-ссылка 1 (я ему задала класс active как для активной страницы, по этому классу и можно обращаться к активному номеру) -->
+							<a href="" class="footer-collections__number active">1</a>
+							<!-- номер-ссылка 2 -->
+							<a href="" class="footer-collections__number">2</a>
+							<!-- номер-ссылка 3 -->
+							<a href="" class="footer-collections__number">3</a>
+							<!-- кнопка пагинации назад -->
+							<button class="footer-collections__arrow footer-collections__arrow_next _icon-arrow-slider"></button>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- конец блока Collections -->
+
+			<!-- блок Testimonials -->
+			<!-- *внутри имеется слайдер* -->
+			<section class="page__testimonials testimonials">
+				<div class="testimonials__container">
+					<h2 class="testimonials__title title title_semibold">Testimonials</h2>
+					<!-- Оболонка слайдера -->
+					<div class="testimonials__slider swiper">
+						<!-- Частина слайдера, що рухається -->
+						<div class="testimonials__wrapper swiper-wrapper">
+							<!-- Слайд (в этом внутри прокомментированы элементы, в следующих по аналогии) -->
+							<div class="testimonials__slide slide-testimonial swiper-slide">
+								<div class="slide-testimonial__image">
+									<!-- src-путь к картинке, alt-альтернативный текст (желательно его в одну переменную с именем, они одинаковые должны быть) -->
+									<picture><source srcset="{% static 'mstore/img/testimonials/01.webp' %}" type="image/webp"><img src="{% static 'mstore/img/testimonials/01.jpg' %}" alt="Gita Savitri"></picture>
+								</div>
+								<div class="slide-testimonial__content">
+									<!-- имя -->
+									<h4 class="slide-testimonial__name">Gita Savitri</h4>
+									<!-- инфо -->
+									<p class="slide-testimonial__info">Content Creator/Influencer</p>
+								</div>
+							</div>
+							<!-- Слайд -->
+							<div class="testimonials__slide slide-testimonial swiper-slide">
+								<div class="slide-testimonial__image">
+									<picture><source srcset="{% static 'mstore/img/testimonials/01.webp' %}" type="image/webp"><img src="{% static 'mstore/img/testimonials/01.jpg' %}" alt="Gita Savitri"></picture>
+								</div>
+								<div class="slide-testimonial__content">
+									<h4 class="slide-testimonial__name">Gita Savitri</h4>
+									<p class="slide-testimonial__info">Content Creator/Influencer</p>
+								</div>
+							</div>
+						</div>
+						<!-- Якщо потрібна навігація (ліворуч/праворуч) -->
+						<div class="testimonials__arrows">
+							<button type="button" class="testimonials__arrow testimonials__arrow_prev _icon-arrow-slider-long"></button>
+							<button type="button" class="testimonials__arrow testimonials__arrow_next _icon-arrow-slider-long"></button>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- конец блока Testimonials -->
+
+			<!-- блок Instagram (можно сделать чтобы изменять картинки с админки) -->
+			<section class="page__insta insta">
+				<div class="insta__container">
+					<h2 class="insta__title title">Instagram</h2>
+					<div data-gallery class="insta__items">
+						<!-- в ссылке должен быть указан путь к картинке той же, но большого размера для функционала галереи -->
+						<a href="{% static 'mstore/img/insta/01_big.jpg' %}" class="insta__item">
+							<div class="insta__image-ibg">
+								<!-- src-путь к картинке, alt-альтернативный текст (пусть он везде будет Photo of Watches, его видно при открытии галереи) -->
+								<picture><source data-srcset="{% static 'mstore/img/insta/01.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/insta/01.jpg' %}" alt="Photo of Watches"></picture>
+							</div>
+						</a>
+						<a href="{% static 'mstore/img/insta/02_big.jpg' %}" class="insta__item">
+							<div class="insta__image-ibg">
+								<picture><source data-srcset="{% static 'mstore/img/insta/02.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/insta/02.jpg' %}" alt="Photo of Watches"></picture>
+							</div>
+						</a>
+						<a href="{% static 'mstore/img/insta/03_big.jpg' %}" class="insta__item">
+							<div class="insta__image-ibg">
+								<picture><source data-srcset="{% static 'mstore/img/insta/03.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/insta/03.jpg' %}" alt="Photo of Watches"></picture>
+							</div>
+						</a>
+						<a href="{% static 'mstore/img/insta/04_big.jpg' %}" class="insta__item">
+							<div class="insta__image-ibg">
+								<picture><source data-srcset="{% static 'mstore/img/insta/04.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/insta/04.jpg' %}" alt="Photo of Watches"></picture>
+							</div>
+						</a>
+						<a href="{% static 'mstore/img/insta/05_big.jpg' %}" class="insta__item">
+							<div class="insta__image-ibg">
+								<picture><source data-srcset="{% static 'mstore/img/insta/05.webp' %}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{% static 'mstore/img/insta/05.jpg' %}" alt="Photo of Watches"></picture>
+							</div>
+						</a>
+					</div>
+				</div>
+			</section>
+			<!-- конец блока Instagram -->
+
+
+		<!--     end of content     -->
+{% endblock %}

@@ -1,0 +1,292 @@
+{% extends 'mstore/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+<!-- ********************* -->
+		<!--        CONTENT        -->
+		<!-- ********************* -->
+		<main class="product">
+			<!-- навигация (хлебные крошки) -->
+			<!-- *внутри надо строить текст ссылок исходя из активной страницы, home пусть всегда будет указана, а дальше смотря часы, очки или аксуссуары* -->
+			<nav class="product__breadcrumps breadcrumps">
+				<div class="breadcrumps__container">
+					<ul class="breadcrumps__list">
+						<li class="breadcrumps__item">
+							<!-- пункт-ссылка -->
+							<a href="{% url 'Home' %}" class="breadcrumps__link">Home</a>
+						</li>
+						<li class="breadcrumps__item">
+							<!-- пункт-ссылка -->
+							<a href="" class="breadcrumps__link">Watches</a>
+						</li>
+						<li class="breadcrumps__item">
+							<!-- пункт КОНЕЧНЫЙ (для него свои стили по классу и он внутри span, потому что не должен быть ссылкой) -->
+							<span class="breadcrumps__current">{{ product.name }}</span>
+						</li>
+					</ul>
+				</div>
+			</nav>
+			<!-- конец навигации -->
+
+			<!-- блок со слайдером -->
+			<!-- *внутри основной шаблон для слайдера и форма товара* -->
+			<section class="product__body body-product">
+				<div class="body-product__container">
+					<div class="body-product__images">
+						<!-- тут внутри картинки маленькие должны быть для навигации -->
+						<div class="images-product">
+							<div class="images-product__slider swiper">
+								<div class="images-product__wrapper swiper-wrapper">
+									<!-- src-путь к картинке, alt-альтернативный текст пусть везде будет Image (так дальше все картинки) -->
+
+									<div class="images-product__slide swiper-slide">
+										<picture><source srcset="{{ product.main_image_webp.url }}" type="image/webp"><img src="{{ product.main_image.url }}" alt="Image"></picture>
+									</div>
+
+								{% for image in product_images %}
+
+									<div class="images-product__slide swiper-slide">
+										<picture><source srcset="{{ image.image_webp.url }}" type="image/webp"><img src="{{ image.p_image.url }}" alt="Image"></picture>
+									</div>
+								{% endfor %}
+								</div>
+							</div>
+						</div>
+						<!-- тут внутри картинки самого слайдера -->
+						<div class="images-preview">
+							<div class="images-preview__slider swiper">
+								<div class="images-preview__wrapper swiper-wrapper">
+									<!-- src-путь к картинке, alt-альтернативный текст пусть везде будет Image (так дальше все картинки) -->
+
+									<div class="images-preview__slide swiper-slide">
+										<picture><source srcset="{{ product.main_image_webp.url }}" type="image/webp"><img src="{{ product.main_image.url }}" alt="Image"></picture>
+									</div>
+									{% for image in product_images %}
+									<div class="images-preview__slide swiper-slide">
+										<picture><source srcset="{{ image.image_webp.url }}" type="image/webp"><img src="{{ image.p_image.url }}" alt="Image"></picture>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- форма товара -->
+
+					<form
+							{% if product.related_product %}
+							action="{% url 'Product' product.related_product.slug %}"
+							{% endif %}
+							class="body-product__content">
+
+						<!-- название -->
+						<h1 data-da=".body-product__container, 1140, first" class="body-product__title">{{ product.name }}</h1>
+						<div class="body-product__price price-product">
+							<!-- старая цена -->
+							<div class="price-product__old">$ {{ product.price }}</div>
+							<!-- цена со скидкой -->
+							<div class="price-product__value">$ {{ product.sell_price }}</div>
+						</div>
+						{% if product.related_product %}
+						<div class="body-product__model model-product">
+							<div class="model-product__label">Choose Model</div>
+							<div class="model-product__options">
+							{% if product.model == "EBONY" %}
+								<div class="model-product__option option-product">
+									<!-- выбор модели #1 в этом input -->
+									<input checked id="o-1" class="option-product__input" type="radio" name="model" value="1">
+									<label for="o-1" class="option-product__label">
+										<picture ><source srcset="{% static 'mstore/img/product/models/01.webp' %}" type="image/webp"><img src="{% static 'mstore/img/product/models/01.jpg' %}" alt="Model #1"></picture>
+									</label>
+								</div>
+								<div class="model-product__option option-product">
+									<!-- выбор модели #2 в этом input -->
+									<input id="o-2" class="option-product__input" type="radio" name="model" value="2">
+									<label for="o-2" class="option-product__label">
+										<a href="{% url 'Product' product.related_product.slug %}"><picture><source srcset="{% static 'mstore/img/product/models/02.webp' %}" type="image/webp"><img src="{% static 'mstore/img/product/models/02.jpg' %}" alt="Model #2"></picture></a>
+									</label>
+								</div>
+
+								{% elif product.model == "MAPLE" %}
+
+								<div class="model-product__option option-product">
+									<!-- выбор модели #1 в этом input -->
+									<input  id="o-1" class="option-product__input" type="radio" name="model" value="1">
+									<label for="o-1" class="option-product__label">
+										<a href="{% url 'Product' product.related_product.slug %}"><picture ><source srcset="{% static 'mstore/img/product/models/01.webp' %}" type="image/webp"><img src="{% static 'mstore/img/product/models/01.jpg' %}" alt="Model #1"></picture></a>
+									</label>
+								</div>
+								<div class="model-product__option option-product">
+									<!-- выбор модели #2 в этом input -->
+									<input checked id="o-2" class="option-product__input" type="radio" name="model" value="2">
+									<label for="o-2" class="option-product__label">
+										<picture><source srcset="{% static 'mstore/img/product/models/02.webp' %}" type="image/webp"><img src="{% static 'mstore/img/product/models/02.jpg' %}" alt="Model #2"></picture>
+									</label>
+								</div>
+								{% endif %}
+							</div>
+						</div>
+						{% endif %}
+						</form>
+						<form hx-target="#blank" hx-trigger="submit" hx-post="{% url 'Add product page' product.slug %}" >{% csrf_token %}
+						<div class="body-product__actions">
+							<div data-quantity class="body-product__quantity quantity">
+								<button data-quantity-minus type="button" class="quantity__button quantity__button_minus"></button>
+
+									<div class="quantity__input">
+									<!-- поле количества -->
+										<input data-quantity-value='True' autocomplete="off" type="text" name="quantity" value="1">
+								</div>
+								<button data-quantity-plus type="button" class="quantity__button quantity__button_plus"></button>
+							</div>
+							<!-- кнопка добавить в корзину -->
+
+							<button data-ripple type="submit" class="body-product__add-to-cart button button_cart"><span class="_icon-cart-plus">Add to cart</span></button>
+							<button data-ripple type="submit" class=" button button_cart"><span class="_icon-cart-plus">Add to cart</span></button>
+
+							<!-- неработающая ссылка cicil -->
+							<a href="#" class="body-product__cicil border-button border-button_cicil">
+								<img src="{% static 'mstore/img/icons/cicil.svg' %}" alt="cicil">
+							</a>
+						</div>
+
+
+					</form>
+					<!-- конец формы товара -->
+				</div>
+			</section>
+			<!-- конец блока со слайдером -->
+
+			<!-- блок с табами -->
+			<!-- *внутри изменять из админки надо только таб Detail, остальные идентичны для всех товаров* -->
+			<section class="product__info info-product">
+				<div class="info-product__container">
+					<div data-tabs class="info-product__tabs">
+						<nav data-tabs-titles class="info-product__navigation">
+							<button type="button" class="info-product__title _tab-active">Detail</button>
+							<button type="button" class="info-product__title">Warranty</button>
+							<button type="button" class="info-product__title">How to Adjust</button>
+							<button type="button" class="info-product__title">How to Care</button>
+						</nav>
+						<div data-tabs-body class="info-product__content">
+							<!-- таб Detail -->
+							<div class="info-product__body">
+								<!-- заголовок -->
+
+								<!-- параграф текста обязательно должен быть вложен в этот div -->
+								{{ product.description | safe }}
+								<div class="info-product__image">
+									<!-- картинка именно эта будет только в 2 товарах: Way Kambas Mini Ebony, Way Kambas Mini Maple -->
+									{% if product_scheme %}
+									<picture><source data-srcset="{{ product_scheme.scheme_image_webp.url }}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{{ product_scheme.scheme_image.url }}" alt="Scheme"></picture>
+									{% endif %}
+								</div>
+							</div>
+							<!-- конец таба Detail -->
+							<div class="info-product__body">
+								<h4 class="info-product__label">1. Lifetime Warranty</h4>
+								<div class="info-product__text">
+									<p>for Battery and Crown.</p>
+								</div>
+								<h4 class="info-product__label">2. 1 Year Warranty</h4>
+								<div class="info-product__text">
+									<p>for Failure Of Clockwork (Movement).</p>
+								</div>
+								<h4 class="info-product__label">3. 6 Months Warranty</h4>
+								<div class="info-product__text">
+									<p>for Damage in the Watch Strap, Body, Shattered Watch Glass, Buckle, and Damage caused by Water.</p>
+								</div>
+								<h4 class="info-product__label">4. 7-Days Warranty.</h4>
+								<div class="info-product__text">
+									<p>You could Swatch Your Watch with the Other Model with the same Price.</p>
+									<p>(While Stock Last, The Claim will not Apply if the watch is broken due to Submerged in Water)</p>
+								</div>
+							</div>
+							<div class="info-product__body">
+								<div class="info-product__text">
+									<div class="info-product__text">
+										<p>1. Use the corner of the Paperclip to remove the link pin between the straps & Pull It Out.</p>
+									</div>
+									<div class="info-product__text">
+										<p>2. Detach the chosen Clasp.</p>
+									</div>
+									<div class="info-product__text">
+										<p>3. Reattach the Buckle to your Straps.</p>
+									</div>
+									<div class="info-product__text">
+										<p>4. Push The Link Pin back gently.</p>
+									</div>
+								</div>
+							</div>
+							<div class="info-product__body">
+								<div class="info-product__text">
+									<p>1. Things you need Olive Oil and Soft Cloth.</p>
+								</div>
+								<div class="info-product__text">
+									<p>2. Apply a small amount of olive oil into the soft cloth.</p>
+								</div>
+								<div class="info-product__text">
+									<p>3. Gently rub it to your watch.</p>
+								</div>
+								<div class="info-product__text">
+									<p>4. Wait for a couple of mins and wipe it with the dry side of the cloth.</p>
+								</div>
+								<div class="info-product__text">
+									<p>5. You're all set!</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- конец блока с табами -->
+
+			<!-- блок Relate Products -->
+			<!-- *внутри имеются карточки с товарами, пусть показываются рандомно из всех товаров* -->
+			{% if related_products %}
+			<section class="product__relate relate">
+				<div class="relate__container">
+					<h3 class="relate__title title">Related Products</h3>
+					<div class="relate__items">
+						<!-- карточка товара (в этой внутри прокомментированы элементы, в следующих по аналогии) -->
+						{% for product in related_products %}
+						<article class="relate__item item-relate">
+							<div class="item-relate__labels">
+								<!-- флажок скидки (класс item-relate__label_sale) -->
+								{% if product.discount != 0 %}
+								<div class="item-relate__label item-relate__label_sale">{{ product.discount }}% OFF</div>
+								{% endif %}
+								<!-- флажок хит (класс item-relate__label_hit) -->
+								{% if product.hit == True %}
+								<div class="item-relate__label item-relate__label_hit">hit</div>
+								{% endif %}
+								<!-- флажок нью будет с классом item-relate__label_new -->
+								{% if product.new == True %}
+								<div class="item-relate__label item-relate__label_new">new</div>
+								{% endif %}
+							</div>
+							<a href="{% url 'Product' product.slug %}" class="item-relate__image-ibg">
+								<!-- src-путь к картинке, alt-альтернативный текст (желательно его в одну переменную с названием, они одинаковые должны быть) -->
+								<picture><source data-srcset="{{ product.card_image_webp.url }}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="  data-src="{{ product.card_image.url }}" alt="{{ product.name }}"></picture>
+							</a>
+							<!-- название товара -->
+							<h4 class="item-relate__title">
+								<a href="" class="item-relate__link-title">{{ product.name }}</a>
+							</h4>
+							<!-- старая цена -->
+							{% if product.discount != 0 %}
+								<div class="item-relate__old-price">$ {{ product.price }}</div>
+								{% endif %}
+
+							<!-- цена со скидкой -->
+							<div class="item-relate__price">$ {{ product.sell_price }}</div>
+						</article>
+						{% endfor %}
+					</div>
+				</div>
+			</section>
+			{% endif %}
+			<!-- конец блока Relate Products -->
+			<div id="blank" ></div>
+
+{% endblock %}

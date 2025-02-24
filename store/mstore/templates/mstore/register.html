@@ -1,0 +1,75 @@
+{% extends 'mstore/base.html' %}
+{% load static %}
+{% block content %}
+		<!-- ********************* -->
+		<!--        CONTENT        -->
+		<!-- ********************* -->
+		<main class="register">
+			<!-- блок с формой регистрации -->
+			<section class="register__body body-register">
+				<div class="body-register__container">
+					<!-- начало формы -->
+					<form method="post" class="body-register__form">
+						{% csrf_token %}
+						<div class="body-register__login billing-address">
+							<h3 class="billing-address__title title title_simple">Register</h3>
+							<div class="billing-address__form">
+								<div class="billing-address__line">
+									<label for="{{ form.first_name.id_for_label }}" class="billing-address__label">First Name</label>
+									<!-- ввод полного имени -->
+									{{ form.first_name }}
+									<div class="billing-address__error">{{ form.first_name.errors }}</div>
+								</div>
+								<div class="billing-address__line">
+									<label for="{{ form.last_name.id_for_label }}" class="billing-address__label">Last Name</label>
+									<!-- ввод полного имени -->
+									{{ form.last_name }}
+									<div class="billing-address__error">{{ form.last_name.errors }}</div>
+								</div>
+								<div class="billing-address__line">
+									<label for="{{ form.email.id_for_label }}" class="billing-address__label">Email Address</label>
+									<!-- ввод емаила (надо валидацию) -->
+									{{ form.email }}
+									<!-- ошибка (везде дальше вставлять так же как здесь) -->
+									<div class="billing-address__error">{{ form.email.errors }}</div>
+								</div>
+								<div class="billing-address__line">
+									<label for="{{ form.username.id_for_label }}" class="billing-address__label">Username</label>
+									<!-- ввод username -->
+									{{ form.username }}
+									<!-- ошибка (везде дальше вставлять так же как здесь) -->
+									<div class="billing-address__error">{{ form.username.errors }}</div>
+								</div>
+								<div class="billing-address__line billing-address__line_password">
+									<label for="{{ form.password2.id_for_label }}" class="billing-address__label">Password</label>
+									<!-- ввод пароля -->
+									{{ form.password1 }}
+
+									<a href="#" class="password-control" onclick="return show_hide_password(this);"></a>
+									<div class="billing-address__error">{{ form.password1.errors }}</div>
+								</div>
+								<div class="billing-address__line billing-address__line_password">
+									<label for="{{ form.password2.id_for_label }}" class="billing-address__label">Confirm Password</label>
+									<!-- подтверждение пароля -->
+									{{ form.password2 }}
+									<a href="#" class="password-control" onclick="return show_hide_password_confirm(this);"></a>
+									<div class="billing-address__error">{{ form.password2.errors }}</div>
+									<div class="billing-address__error">{{ form.non_field_errors }}</div>
+								</div>
+							</div>
+						</div>
+						<div class="body-register__actions">
+							<div class="body-register__login">Already have an account?
+								<!-- эта ссылка должна переводить на страницу со входом (login.html) -->
+								<a class="body-register__link" href="{% url 'Login' %}">Log In</a>
+							</div>
+							<!-- кнопка регистрации + можно чтобы после осуществления регистрации эта кнопка преводила на страницу входа и человек сразу мог войти в созданный аккаунт -->
+							<button type="submit" class="body-register__button button">Register</button>
+						</div>
+					</form>
+					<!-- конец формы -->
+				</div>
+			</section>
+			<!-- конец блока с формой регистрации -->
+
+			{% endblock %}

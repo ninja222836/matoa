@@ -1,0 +1,51 @@
+{% extends 'mstore/base.html' %}
+{% load static %}
+{% block content %}
+		<!-- ********************* -->
+		<!--        CONTENT        -->
+		<!-- ********************* -->
+		<main class="login">
+			<!-- блок с формой входа -->
+			<section class="login__body body-login">
+				<div class="body-login__container">
+					<!-- начало формы -->
+					<form method="post" class="body-login__form">
+						{% csrf_token %}
+						<div class="body-login__login billing-address">
+							<h3 class="billing-address__title title title_simple">Log In</h3>
+
+							<div class="billing-address__form">
+								<div class="billing-address__line">
+									<label for="{{ form.username.id_for_label }}" class="billing-address__label">Username</label>
+									<!-- ввод username -->
+									{{ form.username }}
+									<!-- ошибка (везде дальше вставлять так же как здесь) -->
+									<div class="billing-address__error">{{ form.username.errors }}</div>
+								</div>
+								<div class="billing-address__line billing-address__line_password">
+									<label for="{{ form.password.id_for_label }}" class="billing-address__label">Password</label>
+									<!-- ввод пароля -->
+									{{ form.password }}
+									<a href="#" class="password-control" onclick="return show_hide_password(this);"></a>
+									<div class="billing-address__error">{{ form.password.errors }}</div>
+									<div class="billing-address__error">{{ form.non_field_errors }}</div>
+								</div>
+							</div>
+						</div>
+						<div class="body-login__actions">
+							<div class="body-login__register">Don't have an account?
+								<!-- эта ссылка должна переводить на страницу с регистрацией (register.html) -->
+								<a class="body-login__link" href="{% url 'Register' %}">Register now!</a>
+							</div>
+							<!-- кнопка входа в аккаунт -->
+							<button type="submit" class="body-login__button button">Log In</button>
+						</div>
+					</form>
+					<!-- конец формы -->
+				</div>
+			</section>
+			<!-- конец блока с формой входа и "чеком" -->
+
+
+{% endblock %}
+
