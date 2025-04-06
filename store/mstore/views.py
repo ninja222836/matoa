@@ -9,14 +9,15 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView
 
 from mstore.forms import RegisterUserForm, LoginUserForm, QuantityForm
-from mstore.models import Product, ProductImage, ProductCategory, ProductScheme, Order, OrderItem #FavouriteProduct
+from mstore.models import Product, ProductImage, ProductCategory, ProductScheme, Order, OrderItem  # FavouriteProduct
 from mstore.utils import cart_add_util
 
 
 def home(request):
     products = Product.objects.filter(is_published=True)
 
-    products_for_slider = products.exclude(description_for_slider__isnull=True).exclude(description_for_slider__exact='')
+    products_for_slider = products.exclude(description_for_slider__isnull=True).exclude(
+        description_for_slider__exact='')
 
     monthly_deals = products.filter(category__name='Watches').order_by('-time_create')[:4]
 
@@ -32,6 +33,7 @@ def home(request):
 
                                                 })
 
+
 def search(request):
     if request.method == 'GET':
         return redirect(reverse('Search Results'))
@@ -44,23 +46,18 @@ def product(request, slug):
     product_scheme = ProductScheme.objects.filter(product=product).first()
     quantity_form = QuantityForm
 
-
-
-
     products = list(Product.objects.filter(model=product.model, category=product.category).exclude(pid=product.pid))
     if len(products) >= 4:
         related_products = random.sample(products, 4)
     else:
         related_products = products
 
-
-
     return render(request, 'mstore/product.html', {'title': product.name,
                                                    'product': product,
                                                    'product_images': product_images,
                                                    'related_products': related_products,
                                                    'product_scheme': product_scheme,
-                                                   'quantity_form': quantity_form,})
+                                                   'quantity_form': quantity_form, })
 
 
 def product_list(request, slug):
@@ -69,14 +66,12 @@ def product_list(request, slug):
 
     return render(request, 'mstore/watches.html', {'title': category.name,
                                                    'category': category,
-                                                   'products': products,})
+                                                   'products': products, })
 
 
 class SearchView(ListView):
     model = Product
     template_name = 'mstore/watches.html'
-
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -104,7 +99,7 @@ def search_tab(request):
     else:
         results = None
 
-    context = {'results':results}
+    context = {'results': results}
 
     return render(request, 'mstore/search_results.html', context)
 
@@ -113,7 +108,6 @@ class RegisterUser(CreateView):
     form_class = RegisterUserForm
     template_name = 'mstore/register.html'
     success_url = reverse_lazy('Login')
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -130,8 +124,8 @@ class LoginUser(LoginView):
         context['title'] = 'Login'
         return context
 
-def add_to_cart(request, slug):
 
+def add_to_cart(request, slug):
     if request.user.is_anonymous:
         return JsonResponse('You are not registered!', safe=False)
 
@@ -143,8 +137,8 @@ def add_to_cart(request, slug):
     print(f"Item {orderItem} was added successfully")
     return JsonResponse('', safe=False)
 
-def add_product_page(request, slug):
 
+def add_product_page(request, slug):
     quantity = request.POST.get('quantity')
 
     orderItem = cart_add_util(request, slug)[0]
@@ -156,23 +150,23 @@ def add_product_page(request, slug):
     print("true")
     return HttpResponse("OK")
 
+
 def cart(request):
     if request.user.is_anonymous:
         return render(request, 'mstore/cart_products.html', {'cart_products': None,
-                                                         'order': None,})
+                                                             'order': None, })
 
     customer = request.user.customer
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
-
 
     cart_products = OrderItem.objects.filter(order=order)
     print(cart_products)
 
     return render(request, 'mstore/cart_products.html', {'cart_products': cart_products,
-                                                         'order': order,})
+                                                         'order': order, })
+
 
 def update_cart(request, slug, button_value):
-
     action = button_value
     print('Action', action)
 
@@ -196,15 +190,17 @@ def update_cart(request, slug, button_value):
     cart_products = OrderItem.objects.filter(order=order)
 
     return render(request, 'mstore/cart_products.html', {'cart_products': cart_products,
-                                                         'order': order,})
+                                                         'order': order, })
+
 
 def favourites(request):
     customer = request.user.customer
 
-    favourite_products = FavouriteProduct.objects.filter(customer=customer)
+    favourite_products = {}
     return render(request, 'mstore/watches.html', {'title': 'Favourite Products',
                                                    'products': favourite_products,
-                                                   'text': 'Your favourite products',})
+                                                   'text': 'Your favourite products', })
+
 
 def add_to_favourites(request, slug):
     product = get_object_or_404(Product, slug=slug)
@@ -219,14 +215,16 @@ def add_to_favourites(request, slug):
         print("added", product.favourites.all())
         liked = True
 
-    return render(request, 'mstore/liked_card.html', {'liked': liked })
+    return render(request, 'mstore/liked_card.html', {'liked': liked})
 
 
 def checkout(request):
     return render(request, 'mstore/checkout.html', {'title': 'Checkout'})
 
+
 def payment(request):
     return render(request, 'mstore/payment.html', {'title': 'Payment'})
+
 
 def logout_user(request):
     logout(request)
