@@ -23,6 +23,7 @@ htmxpatterns = [
     path('add-to-cart/<slug:slug>', add_to_cart, name="Add to cart"),
     path('add-product-page/<slug:slug>', add_product_page, name="Add product page"),
     path('add-favourite/<slug:slug>', add_to_favourites, name="Add to Favourites"),
+    path('cart/quantity-fragment/', cart_quantity, name="Update cart quantity")
 ]
 
 urlpatterns += htmxpatterns

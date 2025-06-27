@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'mstore.global_models.global_categories',
+                'mstore.context_processors.cart_item_count',
             ],
         },
     },

@@ -135,7 +135,7 @@ def add_to_cart(request, slug):
 
     orderItem.save()
     print(f"Item {orderItem} was added successfully")
-    return JsonResponse('', safe=False)
+    return JsonResponse('Added successfully', safe=False)
 
 
 def add_product_page(request, slug):
@@ -192,6 +192,11 @@ def update_cart(request, slug, button_value):
     return render(request, 'mstore/cart_products.html', {'cart_products': cart_products,
                                                          'order': order, })
 
+def cart_quantity(request):
+    customer = request.user.customer
+    order = Order.objects.filter(customer=customer, complete=False)[0]
+    quantity = order.get_cart_items
+    return render(request, 'mstore/cart_quantity.html', {'cart_item_count': quantity})
 
 def favourites(request):
     customer = request.user.customer

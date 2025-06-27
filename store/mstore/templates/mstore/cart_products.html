@@ -35,17 +35,17 @@
 									</div>
 									<div class="item-cart__actions">
 										<div data-quantity class="item-cart__quantity quantity">
-											<button hx-trigger="click" hx-target="#cart_cards" hx-get="{% url 'Update Cart' cart_product.product.slug 'remove' %}" data-quantity-minus type="button" class="quantity__button quantity__button_minus"></button>
+											<button hx-trigger="click" hx-target="#cart_cards" hx-get="{% url 'Update Cart' cart_product.product.slug 'remove' %}" data-quantity-minus type="button" class="quantity__button quantity__button_minus cart-action-button"></button>
 											<div class="quantity__input">
 												<!-- поле количества -->
 												<input data-quantity-value autocomplete="off" type="text" name="form[]" value="{{ cart_product.quantity }}">
 											</div>
-											<button hx-trigger="click" hx-target="#cart_cards" hx-get="{% url 'Update Cart' cart_product.product.slug 'add' %}" data-quantity-plus type="button" class="quantity__button quantity__button_plus"></button>
+											<button hx-trigger="click" hx-target="#cart_cards" hx-get="{% url 'Update Cart' cart_product.product.slug 'add' %}" data-quantity-plus type="button" class="quantity__button quantity__button_plus cart-action-button"></button>
 										</div>
 										<!-- общая стоимость по 1 виду товара -->
 										<div class="item-cart__total">$ {{ cart_product.get_total }}</div>
 										<!-- кнопка удалить товар -->
-										<button hx-trigger="click" hx-target="#cart_cards" hx-get="{% url 'Update Cart' cart_product.product.slug 'delete' %}" class="item-cart__delete _icon-delete"></button>
+										<button hx-trigger="click" hx-target="#cart_cards" hx-get="{% url 'Update Cart' cart_product.product.slug 'delete' %}" class="item-cart__delete _icon-delete cart-action-button"></button>
 									</div>
 								</div>
 							</div>

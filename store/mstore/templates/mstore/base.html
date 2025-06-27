@@ -42,7 +42,7 @@
 					<a href="{% url 'Login' %}" data-da=".menu__body, 400" class="actions-header__login _icon-user">Log In</a>
 					{% endif %}
 					<a href="{% url 'Favourites' %}" class="actions-header__like _icon-like"></a>
-					<a href="#" class="actions-header__cart _icon-cart" hx-trigger="click, load" hx-target="#cart_cards" hx-get="{% url 'Cart' %}" data-popup="#cart_" ><span></span></a>
+					<a href="#" class="actions-header__cart _icon-cart" hx-trigger="click, load" hx-target="#cart_cards" hx-get="{% url 'Cart' %}" data-popup="#cart_" ><span id="cart_quantity">{{ cart_item_count }}</span></a>
 					<button type="button" class="icon-menu"><span></span></button>
 				</div>
 			</div>
@@ -216,7 +216,7 @@
 	{% include 'mstore/cart.html' %}
 	<!--  конец попапа cart  -->
 
-	<script src="{% static 'mstore/js/app.min.js' %}?_v=20230808184149"></script>
+	<script src="{% static 'mstore/js/app.js' %}?_v=20230808184149"></script>
 </body>
 
 
@@ -253,3 +253,27 @@
 			return false;
 		}
 	</script>
+<script>
+
+let lastCartButtonClicked = null;
+
+	document.body.addEventListener('click', function (e) {
+  if (e.target.closest('.cart-action-button')) {
+    lastCartButtonClicked = e.target.closest('.cart-action-button');
+  } else {
+    lastCartButtonClicked = null;
+  }
+});
+	document.body.addEventListener('htmx:afterRequest', function () {
+  if (lastCartButtonClicked) {
+    htmx.ajax('GET', '/cart/quantity-fragment/', {
+      target: '#cart_quantity'
+    });
+    lastCartButtonClicked = null; // сбрасываем
+  }
+});
+
+
+
+
+</script>

@@ -7084,7 +7084,8 @@ PERFORMANCE OF THIS SOFTWARE.
                     imageFlyBlock.style.cssText = `\n\t\t\t\ttop: ${headerCart.getBoundingClientRect().top}px;\n\t\t\t\tleft: ${headerCart.getBoundingClientRect().left}px;\n\t\t\t\twidth: 0;\n\t\t\t\theight: 0;\n\t\t\t\topacity: 0;\n\t\t\t\ttransition: all ${speed}ms;\n\t\t\t`;
                 }), 5);
                 setTimeout((() => {
-                    headerCartQuantity.innerHTML = +headerCartQuantity.innerHTML + +productQuantity;
+                    htmx.ajax('GET', '/cart/quantity-fragment/', {
+            target: '#cart_quantity'});
                     imageFlyBlock.remove();
                 }), speed);
             }
@@ -7117,7 +7118,8 @@ PERFORMANCE OF THIS SOFTWARE.
                 imageFlyBlock.style.cssText = `\n\t\t\ttop: ${headerCart.getBoundingClientRect().top}px;\n\t\t\tleft: ${headerCart.getBoundingClientRect().left}px;\n\t\t\twidth: 0;\n\t\t\theight: 0;\n\t\t\topacity: 0;\n\t\t\ttransition: all ${speed}ms;\n\t\t`;
             }), 5);
             setTimeout((() => {
-                headerCartQuantity.innerHTML = +headerCartQuantity.innerHTML + +productQuantity;
+                htmx.ajax('GET', '/cart/quantity-fragment/', {
+            target: '#cart_quantity'});
                 imageFlyBlock.remove();
             }), speed);
         }
@@ -7137,10 +7139,84 @@ PERFORMANCE OF THIS SOFTWARE.
                 imageFlyBlock.style.cssText = `\n\t\t\ttop: ${headerCart.getBoundingClientRect().top}px;\n\t\t\tleft: ${headerCart.getBoundingClientRect().left}px;\n\t\t\twidth: 0;\n\t\t\theight: 0;\n\t\t\topacity: 0;\n\t\t\ttransition: all ${speed}ms;\n\t\t`;
             }), 5);
             setTimeout((() => {
-                headerCartQuantity.innerHTML = +headerCartQuantity.innerHTML + +productQuantity;
+
+            // ❌ убираем manual увеличение числа
+            // ✅ просто отправим HTMX-запрос для обновления
+            htmx.ajax('GET', '/cart/quantity-fragment/', {
+            target: '#cart_quantity'});
                 imageFlyBlock.remove();
+
+                const form = document.querySelector(".body-product__add-to-cart").closest("form");
+                form.requestSubmit();
             }), speed);
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll(".cards__item");
+
+    cards.forEach(function (card, index) {
+        // Назначим уникальный id
+        const cardId = `product-card-${index}`;
+        card.setAttribute("id", cardId);
+
+        document.addEventListener("click", function (e) {
+            const targetElement = e.target;
+
+            // Если нажали на кнопку "Add to cart" внутри этой карточки
+            if (targetElement.closest(`#${cardId} .item-card__cart`)) {
+                addToCartFromCard(cardId);
+                e.preventDefault(); // Остановим поведение кнопки
+            }
+        });
+
+        function addToCartFromCard(id) {
+            const speed = 1000;
+            const headerCart = document.querySelector(".actions-header__cart");
+            const headerCartQuantity = headerCart.querySelector("span");
+            const productImage = document.querySelector(`#${id} .item-card__image-ibg img`);
+            const productQuantity = 1;
+
+            // Клонируем картинку товара
+            const imageFly = productImage.cloneNode(true);
+            const imageFlyBlock = document.createElement("div");
+            imageFlyBlock.classList.add("image-fly");
+            imageFlyBlock.append(imageFly);
+            document.body.append(imageFlyBlock);
+
+            // Установка начальных координат (откуда летит)
+            imageFlyBlock.style.cssText = `
+                top: ${productImage.getBoundingClientRect().top}px;
+                left: ${productImage.getBoundingClientRect().left}px;
+                width: ${productImage.offsetWidth}px;
+                height: ${productImage.offsetHeight}px;
+            `;
+
+            // Запуск анимации
+            setTimeout(() => {
+                imageFlyBlock.style.cssText = `
+                    top: ${headerCart.getBoundingClientRect().top}px;
+                    left: ${headerCart.getBoundingClientRect().left}px;
+                    width: 0;
+                    height: 0;
+                    opacity: 0;
+                    transition: all ${speed}ms;
+                `;
+            }, 5);
+
+            // Удаляем "летящую" картинку и обновляем корзину
+            setTimeout(() => {
+                imageFlyBlock.remove();
+
+                // Обновляем количество товаров через HTMX
+                htmx.ajax('GET', '/cart/quantity-fragment/', {
+                    target: '#cart_quantity'
+                });
+            }, speed);
+        }
+    });
+});
+
+
         window["FLS"] = true;
         isWebp();
         addTouchClass();
