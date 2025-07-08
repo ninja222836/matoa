@@ -254,7 +254,6 @@
 		}
 	</script>
 <script>
-
 let lastCartButtonClicked = null;
 
 	document.body.addEventListener('click', function (e) {
@@ -272,8 +271,38 @@ let lastCartButtonClicked = null;
     lastCartButtonClicked = null; // сбрасываем
   }
 });
-
-
-
-
 </script>
+<script>
+  document.body.addEventListener("htmx:afterOnLoad", function(evt) {
+    const response = evt.detail.xhr.responseText;
+    try {
+      const data = JSON.parse(response);
+      if (data.message) {
+        showToast(data.message); // своя функция показа уведомлений
+      }
+    } catch (e) {
+      // Не JSON — пропускаем
+    }
+  });
+
+  function showToast(msg) {
+    const toast = document.createElement("div");
+    toast.innerText = msg;
+    toast.className = "popup-toast";
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+</script>
+<style>
+	.popup-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #d84727;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 9999;
+  opacity: 0.9;
+}
+</style>

@@ -72,12 +72,12 @@
 						</div>
 					</div>
 					<!-- форма товара -->
-
+					<div class="body-product__content" >
 					<form
 							{% if product.related_product %}
 							action="{% url 'Product' product.related_product.slug %}"
 							{% endif %}
-							class="body-product__content">
+							>
 
 						<!-- название -->
 						<h1 data-da=".body-product__container, 1140, first" class="body-product__title">{{ product.name }}</h1>
@@ -128,7 +128,9 @@
 						</div>
 						{% endif %}
 						</form>
-						<form hx-target="#blank" hx-trigger="submit" hx-post="{% url 'Add product page' product.slug %}" >{% csrf_token %}
+						<div id="dummy-response" style="display: none;"></div>
+						<form hx-target="#dummy-response" hx-trigger="submit" hx-post="{% url 'Add product page' product.slug %}" >{% csrf_token %}
+							<div class="body-product__actions" style="margin-top: 2rem;"></div>
 						<div class="body-product__actions">
 							<div data-quantity class="body-product__quantity quantity">
 								<button data-quantity-minus type="button" class="quantity__button quantity__button_minus"></button>
@@ -152,6 +154,7 @@
 
 
 					</form>
+						</div>
 					<!-- конец формы товара -->
 				</div>
 			</section>
@@ -287,6 +290,6 @@
 			</section>
 			{% endif %}
 			<!-- конец блока Relate Products -->
-			<div id="blank" ></div>
+
 
 {% endblock %}

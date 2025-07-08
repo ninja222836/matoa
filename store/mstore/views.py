@@ -135,7 +135,7 @@ def add_to_cart(request, slug):
 
     orderItem.save()
     print(f"Item {orderItem} was added successfully")
-    return JsonResponse('Added successfully', safe=False)
+    return JsonResponse({'message': 'The product has been added to your cart'})
 
 
 def add_product_page(request, slug):
@@ -148,7 +148,7 @@ def add_product_page(request, slug):
     orderItem.save()
 
     print("true")
-    return HttpResponse("OK")
+    return JsonResponse({'message': 'The product has been added to your cart'})
 
 
 def cart(request):

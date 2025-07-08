@@ -56,7 +56,8 @@
 										</button>
 
 										<!-- кнопка добавления в корзину -->
-										<button hx-trigger="click" hx-get="{% url 'Add to cart' product.slug %}" class="item-card__cart button button_small" type="button">Add to cart</button>
+										<div id="dummy-response" style="display: none;"></div>
+										<button hx-trigger="click" hx-target="#dummy-response" hx-get="{% url 'Add to cart' product.slug %}" class="item-card__cart button button_small" type="button">Add to cart</button>
 									</div>
 								</div>
 							</div>

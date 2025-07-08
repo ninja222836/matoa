@@ -7,13 +7,13 @@
 {% for cart_product in cart_products %}
 							<!-- карточка (в этой внутри прокомментированы элементы, в следующих по аналогии) -->
 							<div class="cart__item item-cart">
-								<a href="" class="item-cart__image">
+								<a href="{% url 'Product' cart_product.product.slug %}" class="item-cart__image">
 									<!-- src-путь к картинке, alt-альтернативный текст (желательно его в одну переменную с названием, они одинаковые должны быть) -->
 									<picture><source srcset="{{ cart_product.product.card_image_webp.url }}" type="image/webp"><img src="{{ cart_product.product.card_image.url }}" alt="{{ cart_product.product.name }}"></picture>
 								</a>
 								<div class="item-cart__body">
 									<!-- название товара -->
-									<a href="" class="item-cart__title">{{ cart_product.product.name }}</a>
+									<a href="{% url 'Product' cart_product.product.slug %}" class="item-cart__title">{{ cart_product.product.name }}</a>
 
 									{% if cart_product.product.discount > 0 %}
 									<!-- старая цена -->

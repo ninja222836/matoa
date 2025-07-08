@@ -7124,32 +7124,49 @@ PERFORMANCE OF THIS SOFTWARE.
             }), speed);
         }
         function addToCart3() {
-            const speed = 1e3;
-            const headerCart = document.querySelector(".actions-header__cart");
-            const headerCartQuantity = headerCart.querySelector("span");
-            const productImage = document.querySelector(".images-product__slide.swiper-slide-active img");
-            const productQuantity = document.querySelector(".quantity__input input").value;
-            const imageFly = productImage.cloneNode(true);
-            const imageFlyBlock = document.createElement("div");
-            imageFlyBlock.classList.add("image-fly");
-            imageFlyBlock.append(imageFly);
-            document.body.append(imageFlyBlock);
-            imageFlyBlock.style.cssText = `\n\t\ttop: ${productImage.getBoundingClientRect().top}px;\n\t\tleft: ${productImage.getBoundingClientRect().left}px;\n\t\twidth: ${productImage.offsetWidth}px;\n\t\theight: ${productImage.offsetHeight}px;\n\t`;
-            setTimeout((() => {
-                imageFlyBlock.style.cssText = `\n\t\t\ttop: ${headerCart.getBoundingClientRect().top}px;\n\t\t\tleft: ${headerCart.getBoundingClientRect().left}px;\n\t\t\twidth: 0;\n\t\t\theight: 0;\n\t\t\topacity: 0;\n\t\t\ttransition: all ${speed}ms;\n\t\t`;
-            }), 5);
-            setTimeout((() => {
+    const speed = 1000;
+    const headerCart = document.querySelector(".actions-header__cart");
+    const productImage = document.querySelector(".images-product__slide.swiper-slide-active img");
+    const imageFly = productImage.cloneNode(true);
+    const imageFlyBlock = document.createElement("div");
+    imageFlyBlock.classList.add("image-fly");
+    imageFlyBlock.append(imageFly);
+    document.body.append(imageFlyBlock);
 
-            // ❌ убираем manual увеличение числа
-            // ✅ просто отправим HTMX-запрос для обновления
-            htmx.ajax('GET', '/cart/quantity-fragment/', {
-            target: '#cart_quantity'});
-                imageFlyBlock.remove();
+    imageFlyBlock.style.cssText = `
+        top: ${productImage.getBoundingClientRect().top}px;
+        left: ${productImage.getBoundingClientRect().left}px;
+        width: ${productImage.offsetWidth}px;
+        height: ${productImage.offsetHeight}px;
+    `;
 
-                const form = document.querySelector(".body-product__add-to-cart").closest("form");
-                form.requestSubmit();
-            }), speed);
-        }
+    setTimeout(() => {
+        imageFlyBlock.style.cssText = `
+            top: ${headerCart.getBoundingClientRect().top}px;
+            left: ${headerCart.getBoundingClientRect().left}px;
+            width: 0;
+            height: 0;
+            opacity: 0;
+            transition: all ${speed}ms;
+        `;
+    }, 5);
+
+    // ⚠️ ТОЛЬКО отправка формы — без кликов
+    const form = document.querySelector(".body-product__add-to-cart").closest("form");
+
+    setTimeout(() => {
+        imageFlyBlock.remove();
+        form.requestSubmit();
+    }, speed);
+}
+
+document.body.addEventListener("htmx:afterOnLoad", function(evt) {
+    if (evt.detail.target && evt.detail.target.id === "dummy-response") {
+        htmx.ajax('GET', '/cart/quantity-fragment/', {
+            target: '#cart_quantity'
+        });
+    }
+});
 
         document.addEventListener("DOMContentLoaded", function () {
     const cards = document.querySelectorAll(".cards__item");

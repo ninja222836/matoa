@@ -29,7 +29,8 @@
 									<a href="{% url 'Product' slider_product.slug %}" class="slide-main-slider__more more">Discover</a>
 									<div class="slide-main-slider__actions">
 										<!-- КНОПКА ДОБАВЛЕНИЯ В КОРЗИНУ №1 -->
-										<button hx-trigger="click" hx-get="{% url 'Add to cart' slider_product.slug %}" data-ripple type="button" class="slide-main-slider__button button button_cart"><span class="_icon-cart-plus">Add to cart</span></button>
+
+										<button hx-trigger="click" hx-target="#dummy-response" hx-get="{% url 'Add to cart' slider_product.slug %}" data-ripple type="button" class="slide-main-slider__button button button_cart"><span class="_icon-cart-plus">Add to cart</span></button>
 										<!-- ее конец, следующее по коду - просто ссылка какая-то -->
 										<a href="#" class="slide-main-slider__button  border-button  border-button_cicil">
 											<img src="{% static 'mstore/img/icons/cicil.svg' %}" alt="cicil">
@@ -123,7 +124,8 @@
 											</svg>
 										</buttton>
 										<!-- кнопка добавления в корзину -->
-										<button hx-trigger="click" hx-get="{% url 'Add to cart' product.slug %}" class="item-monthly-deal__cart button button_small" type="button">Add to cart</button>
+										<div id="dummy-response" style="display: none;"></div>
+										<button hx-trigger="click" hx-target="#dummy-response" hx-get="{% url 'Add to cart' product.slug %}" class="item-monthly-deal__cart button button_small" type="button">Add to cart</button>
 									</div>
 								</div>
 							</div>
