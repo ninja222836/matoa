@@ -82,7 +82,7 @@ def product_list(request, slug):
 
 def product_paginator(request, slug, page_number):
     category = get_object_or_404(ProductCategory, slug=slug)
-    products = Product.objects.filter(is_published=True, category=category)
+    products = Product.objects.filter(is_published=True, category=category).order_by('pid')
 
     paginator = Paginator(products, 8)
     page_obj = paginator.get_page(page_number)
@@ -101,7 +101,7 @@ def product_paginator(request, slug, page_number):
 def favourites(request):
     customer = request.user.customer
     favourites = FavouriteItem.objects.filter(customer=customer).values_list('product_id', flat=True)
-    favourite_products = Product.objects.filter(pid__in=favourites)
+    favourite_products = Product.objects.filter(pid__in=favourites).order_by('pid')
     paginator = Paginator(favourite_products, 8)
     page_obj = paginator.get_page(1)
 
