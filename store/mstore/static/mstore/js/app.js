@@ -7134,6 +7134,7 @@ PERFORMANCE OF THIS SOFTWARE.
     imageFlyBlock.append(imageFly);
     document.body.append(imageFlyBlock);
 
+
     imageFlyBlock.style.cssText = `
         top: ${productImage.getBoundingClientRect().top}px;
         left: ${productImage.getBoundingClientRect().left}px;

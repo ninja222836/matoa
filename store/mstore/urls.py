@@ -23,7 +23,9 @@ htmxpatterns = [
     path('add-to-cart/<slug:slug>', add_to_cart, name="Add to cart"),
     path('add-product-page/<slug:slug>', add_product_page, name="Add product page"),
     path('add-favourite/<slug:slug>', add_to_favourites, name="Add to Favourites"),
-    path('cart/quantity-fragment/', cart_quantity, name="Update cart quantity")
+    path('cart/quantity-fragment/', cart_quantity, name="Update cart quantity"),
+    path('category/<slug:slug>/page/<int:page_number>/', product_paginator, name='product_paginator'),
+    path('favourites/page/<int:page_number>/', favourite_paginator, name='favourite_paginator'),
 ]
 
 urlpatterns += htmxpatterns

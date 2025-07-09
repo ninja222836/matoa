@@ -5,6 +5,7 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 import random
 
+from django.core.paginator import Paginator
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView
 
@@ -62,14 +63,85 @@ def product(request, slug):
 
 def product_list(request, slug):
     category = get_object_or_404(ProductCategory, slug=slug)
-    products = Product.objects.filter(is_published=True, category=category)
+    products = Product.objects.filter(is_published=True, category=category).order_by('pid')
+
+    paginator = Paginator(products, 8)
+    page_obj = paginator.get_page(1)
+
     customer = request.user.customer
     liked_products = FavouriteItem.objects.filter(customer=customer).values_list('product_id', flat=True)
 
-    return render(request, 'mstore/watches.html', {'title': category.name,
-                                                   'category': category,
-                                                   'products': products,
-                                                   'liked': liked_products, })
+    return render(request, 'mstore/watches.html', {
+        'title': category.name,
+        'category': category,
+        'page_obj': page_obj,
+        'liked': liked_products,
+        'slug': slug,
+    })
+
+
+def product_paginator(request, slug, page_number):
+    category = get_object_or_404(ProductCategory, slug=slug)
+    products = Product.objects.filter(is_published=True, category=category)
+
+    paginator = Paginator(products, 8)
+    page_obj = paginator.get_page(page_number)
+
+    customer = request.user.customer
+    liked_products = FavouriteItem.objects.filter(customer=customer).values_list('product_id', flat=True)
+
+    return render(request, 'mstore/pagination_cards.html', {
+        'page_obj': page_obj,
+        'liked': liked_products,
+        'slug': slug,
+        'category': category,
+    })
+
+
+def favourites(request):
+    customer = request.user.customer
+    favourites = FavouriteItem.objects.filter(customer=customer).values_list('product_id', flat=True)
+    favourite_products = Product.objects.filter(pid__in=favourites)
+    paginator = Paginator(favourite_products, 8)
+    page_obj = paginator.get_page(1)
+
+    return render(request, 'mstore/watches.html', {'title': 'Favourite Products',
+                                                   'page_obj': page_obj,
+                                                   'liked': favourites,
+                                                   'slug': 'favourites',
+                                                   'text': 'Your favourite products', })
+
+
+def add_to_favourites(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    customer = request.user.customer
+    favourite, created = FavouriteItem.objects.get_or_create(customer=customer, product=product)
+
+    if not created:
+        favourite.delete()
+        liked = False
+    else:
+        liked = True
+
+    return render(request, 'mstore/liked_card.html', {'liked': liked,
+                                                      'product': product, })
+
+
+def favourite_paginator(request, page_number):
+    customer = request.user.customer
+    liked_products = FavouriteItem.objects.filter(customer=customer).values_list('product_id', flat=True)
+
+    products = Product.objects.filter(pid__in=liked_products).order_by('pid')
+
+    paginator = Paginator(products, 8)
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'mstore/pagination_cards.html', {
+        'page_obj': page_obj,
+        'liked': liked_products,
+        'slug': 'favourites',
+        'text': 'Your favourite products',
+    })
 
 
 class SearchView(ListView):
@@ -137,7 +209,6 @@ def add_to_cart(request, slug):
     orderItem.quantity += 1
 
     orderItem.save()
-    print(f"Item {orderItem} was added successfully")
     return JsonResponse({'message': 'The product has been added to your cart'})
 
 
@@ -150,7 +221,6 @@ def add_product_page(request, slug):
 
     orderItem.save()
 
-    print("true")
     return JsonResponse({'message': 'The product has been added to your cart'})
 
 
@@ -163,7 +233,6 @@ def cart(request):
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
     cart_products = OrderItem.objects.filter(order=order)
-    print(cart_products)
 
     return render(request, 'mstore/cart_products.html', {'cart_products': cart_products,
                                                          'order': order, })
@@ -171,10 +240,8 @@ def cart(request):
 
 def update_cart(request, slug, button_value):
     action = button_value
-    print('Action', action)
 
     util_data = cart_add_util(request, slug)
-    print(util_data)
     orderItem = util_data[0]
     order = util_data[1]
 
@@ -195,37 +262,12 @@ def update_cart(request, slug, button_value):
     return render(request, 'mstore/cart_products.html', {'cart_products': cart_products,
                                                          'order': order, })
 
+
 def cart_quantity(request):
     customer = request.user.customer
     order = Order.objects.filter(customer=customer, complete=False)[0]
     quantity = order.get_cart_items
     return render(request, 'mstore/cart_quantity.html', {'cart_item_count': quantity})
-
-def favourites(request):
-    customer = request.user.customer
-    favourites = FavouriteItem.objects.filter(customer=customer).values_list('product_id', flat=True)
-    favourite_products = Product.objects.filter(pid__in=favourites)
-
-    return render(request, 'mstore/watches.html', {'title': 'Favourite Products',
-                                                   'products': favourite_products,
-                                                   'liked': favourites,
-                                                   'text': 'Your favourite products', })
-
-
-def add_to_favourites(request, slug):
-    print("The favor view has been targeted")
-    product = get_object_or_404(Product, slug=slug)
-    customer = request.user.customer
-    favourite, created = FavouriteItem.objects.get_or_create(customer=customer, product=product)
-
-    if not created:
-        favourite.delete()
-        liked = False
-    else:
-        liked = True
-
-    return render(request, 'mstore/liked_card.html', {'liked': liked,
-                                                                          'product': product,})
 
 
 def checkout(request):
