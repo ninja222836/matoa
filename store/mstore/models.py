@@ -144,6 +144,16 @@ class OrderItem(models.Model):
         total = round(self.product.sell_price * self.quantity, 2)
         return total
 
+class FavouriteItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('customer', 'product')
+
+    def __str__(self):
+        return f"{self.customer.title} ❤ {self.product.name}"
+
 
 class Testimonials(models.Model):
     name = models.CharField(max_length=255, db_index=True)

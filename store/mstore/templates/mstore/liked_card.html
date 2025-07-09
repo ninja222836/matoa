@@ -1,4 +1,5 @@
-<article id class="cards__item item-card {% if liked %}like{% endif %}">
+<div id="like{{ product.pid }}" data-lazy="true">
+<article class="cards__item item-card {% if liked %}like{% endif %}">
 							<div class="item-relate__labels">
 							</div>
 							<a href="{% url 'Product' product.slug %}" class="item-card__image-ibg">
@@ -26,15 +27,17 @@
 									<div class="item-card__actions">
 										<!-- кнопка лайка -->
 
-										<button hx-target="#like" hx-trigger="click" hx-get="{% url 'Add to Favourites' product.slug %}" class="item-card__like" type="button">
+										<button hx-target="#like{{ product.pid }}" hx-trigger="click" hx-get="{% url 'Add to Favourites' product.slug %}" class="item-card__like" type="button">
 											<svg stroke="#d84727" width="20" height="18" viewBox="0 0 22 20" fill="#fff" xmlns="http://www.w3.org/2000/svg">
 												<path d="M20.9999 3.09334C20.1066 1.26001 17.5332 -0.239994 14.5399 0.63334C13.1096 1.0465 11.8616 1.93253 10.9999 3.14667C10.1382 1.93253 8.89027 1.0465 7.45991 0.63334C4.45991 -0.22666 1.89324 1.26001 0.999911 3.09334C-0.253422 5.66001 0.266578 8.54667 2.54658 11.6733C4.33325 14.12 6.88658 16.6 10.5932 19.48C10.7104 19.5714 10.8547 19.621 11.0032 19.621C11.1518 19.621 11.2961 19.5714 11.4132 19.48C15.1132 16.6067 17.6732 14.1467 19.4599 11.6733C21.7332 8.54667 22.2532 5.66001 20.9999 3.09334Z" fill="black" />
 											</svg>
 										</button>
 
 										<!-- кнопка добавления в корзину -->
-										<button hx-trigger="click" hx-get="{% url 'Add to cart' product.slug %}" class="item-card__cart button button_small" type="button">Add to cart</button>
+										<div id="dummy-response" style="display: none;"></div>
+										<button hx-trigger="click" hx-target="#dummy-response" hx-get="{% url 'Add to cart' product.slug %}" class="item-card__cart button button_small" type="button">Add to cart</button>
 									</div>
 								</div>
 							</div>
 						</article>
+							</div>

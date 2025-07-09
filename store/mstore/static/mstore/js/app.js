@@ -5139,11 +5139,12 @@
             initSliders();
         }));
         var lazyload_min = __webpack_require__(732);
-        new lazyload_min({
-            elements_selector: "[data-src],[data-srcset]",
-            class_loaded: "_lazy-loaded",
-            use_native: true
-        });
+        window.lazyLoadInstance = new lazyload_min({
+  elements_selector: "[data-src],[data-srcset]",
+  class_loaded: "_lazy-loaded",
+  use_native: true
+});
+
         class ScrollWatcher {
             constructor(props) {
                 let defaultConfig = {
@@ -7159,6 +7160,15 @@ PERFORMANCE OF THIS SOFTWARE.
         form.requestSubmit();
     }, speed);
 }
+
+document.body.addEventListener("htmx:afterSwap", function (evt) {
+  if (evt.target.querySelector('[data-lazy="true"]')) {
+    if (window.lazyLoadInstance) {
+      window.lazyLoadInstance.update();
+    }
+  }
+});
+
 
 document.body.addEventListener("htmx:afterOnLoad", function(evt) {
     if (evt.detail.target && evt.detail.target.id === "dummy-response") {

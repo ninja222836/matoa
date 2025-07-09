@@ -9,7 +9,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView
 
 from mstore.forms import RegisterUserForm, LoginUserForm, QuantityForm
-from mstore.models import Product, ProductImage, ProductCategory, ProductScheme, Order, OrderItem  # FavouriteProduct
+from mstore.models import Product, ProductImage, ProductCategory, ProductScheme, Order, OrderItem, FavouriteItem
 from mstore.utils import cart_add_util
 
 
@@ -63,10 +63,13 @@ def product(request, slug):
 def product_list(request, slug):
     category = get_object_or_404(ProductCategory, slug=slug)
     products = Product.objects.filter(is_published=True, category=category)
+    customer = request.user.customer
+    liked_products = FavouriteItem.objects.filter(customer=customer).values_list('product_id', flat=True)
 
     return render(request, 'mstore/watches.html', {'title': category.name,
                                                    'category': category,
-                                                   'products': products, })
+                                                   'products': products,
+                                                   'liked': liked_products, })
 
 
 class SearchView(ListView):
@@ -200,27 +203,29 @@ def cart_quantity(request):
 
 def favourites(request):
     customer = request.user.customer
+    favourites = FavouriteItem.objects.filter(customer=customer).values_list('product_id', flat=True)
+    favourite_products = Product.objects.filter(pid__in=favourites)
 
-    favourite_products = {}
     return render(request, 'mstore/watches.html', {'title': 'Favourite Products',
                                                    'products': favourite_products,
+                                                   'liked': favourites,
                                                    'text': 'Your favourite products', })
 
 
 def add_to_favourites(request, slug):
+    print("The favor view has been targeted")
     product = get_object_or_404(Product, slug=slug)
     customer = request.user.customer
-    if product.favourites.filter(id=customer.id).exists():
-        product.favourites.remove(customer)
-        print("removed", product.favourites.all())
-        liked = False
+    favourite, created = FavouriteItem.objects.get_or_create(customer=customer, product=product)
 
+    if not created:
+        favourite.delete()
+        liked = False
     else:
-        product.favourites.add(customer)
-        print("added", product.favourites.all())
         liked = True
 
-    return render(request, 'mstore/liked_card.html', {'liked': liked})
+    return render(request, 'mstore/liked_card.html', {'liked': liked,
+                                                                          'product': product,})
 
 
 def checkout(request):
